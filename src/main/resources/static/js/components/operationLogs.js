@@ -2,269 +2,321 @@
  * 操作日志组件
  * 用于显示系统敏感操作日志记录
  */
-class OperationLogComponent {
-    constructor() {
-        this.logs = [];
-        this.logTypes = ['DELETE_ORDER', 'UPDATE_ORDER_STATUS', 'OTHER'];
-    }
-
-    /**
-     * 初始化组件
-     */
-    init() {
+const operationLogs = {
+    data() {
+        return {
+            logs: [],
+            logTypes: ['DELETE_ORDER', 'UPDATE_ORDER_STATUS', 'OTHER'],
+            startDate: '',
+            endDate: '',
+            loading: false,
+            dialogVisible: false,
+            currentLog: null,
+            selectedType: 'ALL'
+        };
+    },
+    mounted() {
         this.loadLogs();
-        this.initEventListeners();
-    }
+    },
+    methods: {
+        /**
+         * 加载日志数据
+         */
+        loadLogs() {
+            this.loading = true;
+            axios.get('/api/operation-logs')
+                .then(response => {
+                    this.logs = response.data;
+                })
+                .catch(error => {
+                    console.error('加载操作日志失败:', error);
+                    ElementPlus.ElMessage.error('加载操作日志失败，请稍后重试');
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
 
-    /**
-     * 加载日志数据
-     */
-    loadLogs() {
-        fetch('/api/operation-logs')
-            .then(response => response.json())
-            .then(data => {
-                this.logs = data;
-                this.renderLogs();
-            })
-            .catch(error => {
-                console.error('加载操作日志失败:', error);
-                this.showError('加载操作日志失败，请稍后重试');
-            });
-    }
-
-    /**
-     * 初始化事件监听器
-     */
-    initEventListeners() {
-        // 日志类型过滤
-        document.querySelectorAll('.log-type-filter').forEach(element => {
-            element.addEventListener('click', event => {
-                const type = event.target.getAttribute('data-type');
-                this.filterLogsByType(type);
-            });
-        });
-
-        // 时间范围查询
-        document.getElementById('log-date-filter-btn')?.addEventListener('click', () => {
-            const startDate = document.getElementById('log-start-date')?.value;
-            const endDate = document.getElementById('log-end-date')?.value;
-
-            if (startDate && endDate) {
-                this.filterLogsByDateRange(startDate, endDate);
-            } else {
-                this.showError('请选择开始和结束日期');
+        /**
+         * 根据类型过滤日志
+         */
+        filterLogsByType(type) {
+            if (!type || type === 'ALL') {
+                this.loadLogs();
+                return;
             }
-        });
-    }
 
-    /**
-     * 根据类型过滤日志
-     */
-    filterLogsByType(type) {
-        if (!type || type === 'ALL') {
-            this.loadLogs();
-            return;
+            this.loading = true;
+            axios.get(`/api/operation-logs/type/${type}`)
+                .then(response => {
+                    this.logs = response.data;
+                })
+                .catch(error => {
+                    console.error('过滤日志失败:', error);
+                    ElementPlus.ElMessage.error('过滤日志失败，请稍后重试');
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+
+        /**
+         * 根据日期范围过滤日志
+         */
+        filterLogsByDateRange() {
+            if (!this.startDate || !this.endDate) {
+                ElementPlus.ElMessage.warning('请选择开始和结束日期');
+                return;
+            }
+            
+            // 转换为ISO格式的日期时间
+            const start = new Date(this.startDate).toISOString();
+            const end = new Date(this.endDate).toISOString();
+
+            this.loading = true;
+            axios.get(`/api/operation-logs/time-range?start=${start}&end=${end}`)
+                .then(response => {
+                    this.logs = response.data;
+                })
+                .catch(error => {
+                    console.error('按时间范围过滤日志失败:', error);
+                    ElementPlus.ElMessage.error('按时间范围过滤日志失败，请稍后重试');
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+
+        /**
+         * 显示日志详情
+         */
+        showLogDetails(logId) {
+            this.loading = true;
+            axios.get(`/api/operation-logs/${logId}`)
+                .then(response => {
+                    this.currentLog = response.data;
+                    this.dialogVisible = true;
+                })
+                .catch(error => {
+                    console.error('获取日志详情失败:', error);
+                    ElementPlus.ElMessage.error('获取日志详情失败，请稍后重试');
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+
+        /**
+         * 格式化日期
+         */
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+        },
+
+        /**
+         * 获取操作类型显示文本
+         */
+        getOperationTypeText(type) {
+            const typeMap = {
+                'DELETE_ORDER': '删除订单',
+                'UPDATE_ORDER_STATUS': '更新订单状态',
+                'OTHER': '其他操作'
+            };
+            return typeMap[type] || type;
+        },
+
+        /**
+         * 获取操作类型标签样式
+         */
+        getOperationTypeStyle(type) {
+            const styleMap = {
+                'DELETE_ORDER': 'danger',
+                'UPDATE_ORDER_STATUS': 'warning',
+                'OTHER': 'info'
+            };
+            return styleMap[type] || 'info';
         }
-
-        fetch(`/api/operation-logs/type/${type}`)
-            .then(response => response.json())
-            .then(data => {
-                this.logs = data;
-                this.renderLogs();
-            })
-            .catch(error => {
-                console.error('过滤日志失败:', error);
-                this.showError('过滤日志失败，请稍后重试');
-            });
-    }
-
-    /**
-     * 根据日期范围过滤日志
-     */
-    filterLogsByDateRange(startDate, endDate) {
-        // 转换为ISO格式的日期时间
-        const start = new Date(startDate).toISOString();
-        const end = new Date(endDate).toISOString();
-
-        fetch(`/api/operation-logs/time-range?start=${start}&end=${end}`)
-            .then(response => response.json())
-            .then(data => {
-                this.logs = data;
-                this.renderLogs();
-            })
-            .catch(error => {
-                console.error('按时间范围过滤日志失败:', error);
-                this.showError('按时间范围过滤日志失败，请稍后重试');
-            });
-    }
-
-    /**
-     * 渲染日志列表
-     */
-    renderLogs() {
-        const logContainer = document.getElementById('operation-log-list');
-        if (!logContainer) return;
-
-        logContainer.innerHTML = '';
-
-        if (this.logs.length === 0) {
-            logContainer.innerHTML = '<div class="alert alert-info">暂无操作日志记录</div>';
-            return;
-        }
-
-        // 创建日志表格
-        const table = document.createElement('table');
-        table.className = 'table table-striped table-hover';
-
-        // 表头
-        const thead = document.createElement('thead');
-        thead.innerHTML = `
-            <tr>
-                <th>操作时间</th>
-                <th>操作类型</th>
-                <th>操作描述</th>
-                <th>操作人</th>
-                <th>目标ID</th>
-                <th>状态</th>
-                <th>操作</th>
-            </tr>
-        `;
-        table.appendChild(thead);
-
-        // 表体
-        const tbody = document.createElement('tbody');
-        this.logs.forEach(log => {
-            const tr = document.createElement('tr');
-
-            // 格式化时间
-            const date = new Date(log.operationTime);
-            const formattedDate = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-
-            tr.innerHTML = `
-                <td>${formattedDate}</td>
-                <td>${log.operationType || '-'}</td>
-                <td>${log.operationDescription || '-'}</td>
-                <td>${log.operatorName || '-'} (${log.operatorId || '-'})</td>
-                <td>${log.targetId || '-'}</td>
-                <td>${log.success ? '<span class="text-success">成功</span>' : '<span class="text-danger">失败</span>'}</td>
-                <td>
-                    <button class="btn btn-sm btn-info view-log-details" data-id="${log.id}">查看详情</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-
-        logContainer.appendChild(table);
-
-        // 为详情按钮添加事件监听
-        document.querySelectorAll('.view-log-details').forEach(button => {
-            button.addEventListener('click', event => {
-                const logId = event.target.getAttribute('data-id');
-                this.showLogDetails(logId);
-            });
-        });
-    }
-
-    /**
-     * 显示日志详情
-     */
-    showLogDetails(logId) {
-        fetch(`/api/operation-logs/${logId}`)
-            .then(response => response.json())
-            .then(log => {
-                // 显示详情模态框
-                const modal = document.getElementById('log-details-modal');
-                if (!modal) {
-                    this.createLogDetailsModal();
-                }
-
-                document.getElementById('log-details-title').textContent = `操作日志详情 - ${log.operationDescription}`;
-                document.getElementById('log-details-time').textContent = new Date(log.operationTime).toLocaleString();
-                document.getElementById('log-details-type').textContent = log.operationType;
-                document.getElementById('log-details-operator').textContent = `${log.operatorName} (${log.operatorId})`;
-                document.getElementById('log-details-target').textContent = `${log.targetType} - ${log.targetId}`;
-                document.getElementById('log-details-status').textContent = log.success ? '成功' : '失败';
-                document.getElementById('log-details-ip').textContent = log.ip || 'N/A';
-                document.getElementById('log-details-content').textContent = log.details || '无详细信息';
-
-                // 显示模态框
-                const modalElement = new bootstrap.Modal(document.getElementById('log-details-modal'));
-                modalElement.show();
-            })
-            .catch(error => {
-                console.error('获取日志详情失败:', error);
-                this.showError('获取日志详情失败，请稍后重试');
-            });
-    }
-
-    /**
-     * 创建日志详情模态框
-     */
-    createLogDetailsModal() {
-        const modalDiv = document.createElement('div');
-        modalDiv.className = 'modal fade';
-        modalDiv.id = 'log-details-modal';
-        modalDiv.tabIndex = '-1';
-        modalDiv.setAttribute('aria-labelledby', 'log-details-title');
-        modalDiv.setAttribute('aria-hidden', 'true');
-
-        modalDiv.innerHTML = `
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="log-details-title">操作日志详情</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    },
+    template: `
+        <div class="operation-logs-container p-4">
+            <div class="mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">操作日志</h2>
+                
+                <el-card class="filter-card mb-4" shadow="hover">
+                    <div class="filter-section">
+                        <el-row :gutter="20">
+                            <el-col :span="24" class="mb-4">
+                                <div class="filter-group">
+                                    <span class="mr-2 font-medium">日志类型：</span>
+                                    <el-radio-group v-model="selectedType" @change="filterLogsByType" size="large">
+                                        <el-radio-button label="ALL">全部</el-radio-button>
+                                        <el-radio-button v-for="type in logTypes" :key="type" :label="type">
+                                            {{getOperationTypeText(type)}}
+                                        </el-radio-button>
+                                    </el-radio-group>
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <div class="date-filter flex items-center">
+                                    <span class="mr-2 font-medium">时间范围：</span>
+                                    <el-date-picker
+                                        v-model="startDate"
+                                        type="datetime"
+                                        placeholder="开始日期"
+                                        format="YYYY-MM-DD HH:mm:ss"
+                                        class="mr-2"
+                                        size="large"
+                                    ></el-date-picker>
+                                    <span class="mx-2">至</span>
+                                    <el-date-picker
+                                        v-model="endDate"
+                                        type="datetime"
+                                        placeholder="结束日期"
+                                        format="YYYY-MM-DD HH:mm:ss"
+                                        class="mr-2"
+                                        size="large"
+                                    ></el-date-picker>
+                                    <el-button type="primary" @click="filterLogsByDateRange" size="large">
+                                        查询
+                                    </el-button>
+                                </div>
+                            </el-col>
+                        </el-row>
                     </div>
-                    <div class="modal-body">
-                        <div class="row mb-2">
-                            <div class="col-md-3 fw-bold">操作时间:</div>
-                            <div class="col-md-9" id="log-details-time"></div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-3 fw-bold">操作类型:</div>
-                            <div class="col-md-9" id="log-details-type"></div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-3 fw-bold">操作人:</div>
-                            <div class="col-md-9" id="log-details-operator"></div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-3 fw-bold">目标对象:</div>
-                            <div class="col-md-9" id="log-details-target"></div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-3 fw-bold">操作结果:</div>
-                            <div class="col-md-9" id="log-details-status"></div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-3 fw-bold">IP地址:</div>
-                            <div class="col-md-9" id="log-details-ip"></div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-3 fw-bold">详细信息:</div>
-                            <div class="col-md-9">
-                                <pre id="log-details-content" class="bg-light p-2"></pre>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    </div>
-                </div>
+                </el-card>
             </div>
-        `;
+            
+            <el-table 
+                :data="logs" 
+                style="width: 100%" 
+                v-loading="loading"
+                border
+                stripe
+                class="mb-4"
+                :header-cell-style="{
+                    background: '#f5f7fa',
+                    color: '#606266',
+                    fontWeight: 'bold'
+                }"
+            >
+                <el-table-column prop="operationTime" label="操作时间" width="180" fixed>
+                    <template #default="scope">
+                        {{ formatDate(scope.row.operationTime) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="operationType" label="操作类型" width="150">
+                    <template #default="scope">
+                        <el-tag 
+                            :type="getOperationTypeStyle(scope.row.operationType)"
+                            effect="plain"
+                        >
+                            {{getOperationTypeText(scope.row.operationType)}}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="operationDescription" label="操作描述" min-width="200" show-overflow-tooltip></el-table-column>
+                <el-table-column label="操作人" width="180">
+                    <template #default="scope">
+                        <el-tooltip 
+                            :content="scope.row.operatorId" 
+                            placement="top" 
+                            effect="light"
+                        >
+                            <span class="operator-name">
+                                {{ scope.row.operatorName || '-' }}
+                            </span>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="targetId" label="目标ID" width="180" show-overflow-tooltip></el-table-column>
+                <el-table-column label="状态" width="100" align="center">
+                    <template #default="scope">
+                        <el-tag :type="scope.row.success ? 'success' : 'danger'" effect="dark">
+                            {{ scope.row.success ? '成功' : '失败' }}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100" fixed="right" align="center">
+                    <template #default="scope">
+                        <el-button 
+                            type="primary" 
+                            link
+                            @click="showLogDetails(scope.row.id)"
+                        >
+                            详情
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            
+            <!-- 日志详情对话框 -->
+            <el-dialog
+                v-model="dialogVisible"
+                title="操作日志详情"
+                width="60%"
+                destroy-on-close
+                :close-on-click-modal="false"
+                class="operation-log-detail-dialog"
+            >
+                <div class="px-4" style="overflow: hidden">
+                    <el-descriptions 
+                        :column="2" 
+                        border 
+                        class="operation-log-descriptions"
+                    >
+                        <el-descriptions-item label="操作时间">
+                            {{ formatDate(currentLog?.operationTime) }}
+                        </el-descriptions-item>
+                        <el-descriptions-item label="操作类型">
+                            <el-tag 
+                                :type="getOperationTypeStyle(currentLog?.operationType)"
+                                effect="plain"
+                            >
+                                {{ getOperationTypeText(currentLog?.operationType) }}
+                            </el-tag>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="操作人">
+                            {{ currentLog?.operatorName }} ({{ currentLog?.operatorId }})
+                        </el-descriptions-item>
+                        <el-descriptions-item label="操作状态">
+                            <el-tag :type="currentLog?.success ? 'success' : 'danger'" effect="dark">
+                                {{ currentLog?.success ? '成功' : '失败' }}
+                            </el-tag>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="目标对象" :span="2">
+                            {{ currentLog?.targetType }} - {{ currentLog?.targetId }}
+                        </el-descriptions-item>
+                        <el-descriptions-item label="IP地址">
+                            {{ currentLog?.ip || 'N/A' }}
+                        </el-descriptions-item>
+                        <el-descriptions-item label="操作描述">
+                            {{ currentLog?.operationDescription }}
+                        </el-descriptions-item>
+                        <el-descriptions-item label="详细信息" :span="2">
+                            <pre class="bg-gray-50 p-4 rounded-lg text-sm font-mono whitespace-pre-wrap">{{ currentLog?.details || '无详细信息' }}</pre>
+                        </el-descriptions-item>
+                    </el-descriptions>
+                </div>
+                <template #footer>
+                    <div class="dialog-footer px-4">
+                        <el-button @click="dialogVisible = false">关闭</el-button>
+                    </div>
+                </template>
+            </el-dialog>
 
-        document.body.appendChild(modalDiv);
-    }
-
-    /**
-     * 显示错误信息
-     */
-    showError(message) {
-        alert(message);
-    }
-}
+            <style>
+            .operation-log-detail-dialog .el-dialog__body {
+                overflow: hidden;
+                padding: 10px 0;
+            }
+            .operation-log-descriptions {
+                margin: 0;
+            }
+            </style>
+        </div>
+    `
+};
 
 // 导出组件
-window.OperationLogComponent = new OperationLogComponent(); 
+window.operationLogs = operationLogs; 

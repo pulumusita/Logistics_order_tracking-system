@@ -40,22 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     app.component('couriers', couriers);
     app.component('tracking', tracking);
     app.component('statistics', statistics);
-    app.component('operationLogs', {
-        data() {
-            return {
-                logComponent: window.OperationLogComponent
-            }
-        },
-        mounted() {
-            this.logComponent.init();
-        },
-        template: `
-            <div class="operation-logs-container">
-                <h2>操作日志</h2>
-                <div id="operation-log-list"></div>
-            </div>
-        `
-    });
+    app.component('operationLogs', operationLogs);
 
     // 挂载应用
     app.mount('#app');
