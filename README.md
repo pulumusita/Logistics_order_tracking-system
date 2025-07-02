@@ -159,15 +159,20 @@
          mail.smtp.starttls.enable: true
    ```
 
+   除此之外，`Logistics_order_tracking system/src/main/resources/templates/index.html`中也需要修改你自己的高德地图密钥和api，关于这方面请自行百度
+
 ### 项目构建与运行
 
 1. 克隆项目：
    ```bash
-   git clone [项目地址]
+   git clone https://github.com/pulumusita/Logistics_order_tracking-system.git
    cd logistics-tracking-system
    ```
 
+   **推荐clone修改配置后直接导入IDEA运行，更快捷方便，无需手动构建前端和后端**
+
 2. 构建后端服务：
+
    ```bash
    mvn clean install
    ```
