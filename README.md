@@ -165,32 +165,42 @@
 
 1. 克隆项目：
    ```bash
-   git clone https://github.com/pulumusita/Logistics_order_tracking-system.git
+   git clone https://github.com/pulumusitaLogistics_order_tracking-system.git
    cd logistics-tracking-system
    ```
 
-   **推荐clone修改配置后直接导入IDEA运行，更快捷方便，无需手动构建前端和后端**
+2. 导入数据库文件
 
-2. 构建后端服务：
+   ```
+   如果使用navicat等数据库管理软件，直接运行mongdb/logistics_tracking.js即可
+   如果是命令行，登录进mongdb然后运行即可
+   ```
+
+   **推荐clone导入数据库修改配置后直接导入IDEA运行，更快捷方便，无需手动构建前端和后端**
+
+3. 构建后端服务：
 
    ```bash
    mvn clean install
    ```
 
-3. 运行后端服务：
+4. 运行后端服务：
+
    ```bash
    java -jar target/logistics-tracking-system.jar
    ```
 
-4. 构建前端项目：
+5. 构建前端项目：
+
    ```bash
    cd frontend
    npm install
    npm run build
    ```
 
-5. 访问系统：
-   - 打开浏览器访问: `http://localhost:8080`
+6. 访问系统：
+
+- 打开浏览器访问: `http://localhost:8080`
 
 ## 项目结构
 
