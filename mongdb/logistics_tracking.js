@@ -1,0 +1,423 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : mongodb
+ Source Server Type    : MongoDB
+ Source Server Version : 80010 (8.0.10)
+ Source Host           : localhost:27017
+ Source Schema         : logistics_tracking
+
+ Target Server Type    : MongoDB
+ Target Server Version : 80010 (8.0.10)
+ File Encoding         : 65001
+
+ Date: 01/07/2025 13:20:15
+*/
+
+
+// ----------------------------
+// Collection structure for couriers
+// ----------------------------
+db.getCollection("couriers").drop();
+db.createCollection("couriers");
+
+// ----------------------------
+// Documents of couriers
+// ----------------------------
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("685ea0a61e0748b0fdd999a7"),
+    name: "张三",
+    phone: "13800138001",
+    idCard: "110101199001011234",
+    workArea: "北京",
+    online: false,
+    active: true,
+    completedOrders: NumberInt("2"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 1,
+    totalDistance: 4142491.43313367,
+    dailyDeliveries: NumberInt("2"),
+    dailyDistance: 4142491.43313367,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("3"),
+    monthlyDistance: 4142491.43313367,
+    monthlyRating: 0,
+    createTime: ISODate("2025-06-27T13:46:14.000Z"),
+    updateTime: ISODate("2025-06-27T13:46:14.000Z"),
+    lastOnlineTime: ISODate("2025-06-27T13:46:14.000Z"),
+    _class: "com.logistics.tracking.model.Courier"
+} ]);
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("685ea0a61e0748b0fdd999a8"),
+    name: "李四",
+    phone: "13800138002",
+    idCard: "110101199001011235",
+    workArea: "上海",
+    online: true,
+    active: true,
+    completedOrders: NumberInt("1"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 3,
+    totalDistance: 1953561.39338672,
+    dailyDeliveries: NumberInt("3"),
+    dailyDistance: 1953561.39338672,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("1"),
+    monthlyDistance: 1953561.39338672,
+    monthlyRating: 0,
+    createTime: ISODate("2025-06-27T13:46:14.877Z"),
+    updateTime: ISODate("2025-06-27T13:46:14.877Z"),
+    lastOnlineTime: ISODate("2025-06-27T13:46:14.877Z"),
+    _class: "com.logistics.tracking.model.Courier"
+} ]);
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("685ebd2e0c4f0d1e7d16927b"),
+    name: "Winter",
+    phone: "13181151188",
+    idCard: "7672829171902",
+    workArea: "广州",
+    online: false,
+    active: false,
+    completedOrders: NumberInt("0"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 5,
+    totalDistance: 0,
+    dailyDeliveries: NumberInt("0"),
+    dailyDistance: 0,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("0"),
+    monthlyDistance: 0,
+    monthlyRating: 0,
+    _class: "com.logistics.tracking.model.Courier",
+    totalDeliveries: 1
+} ]);
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("685f8248d6d10022bd528a15"),
+    name: "Winter",
+    phone: "13181151178",
+    idCard: "371102200009240011",
+    workArea: "北京",
+    online: true,
+    active: true,
+    completedOrders: NumberInt("0"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 5,
+    totalDistance: 0,
+    dailyDeliveries: NumberInt("0"),
+    dailyDistance: 0,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("0"),
+    monthlyDistance: 0,
+    monthlyRating: 0,
+    _class: "com.logistics.tracking.model.Courier",
+    totalDeliveries: 1
+} ]);
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("685f9635600c723366afb36c"),
+    name: "赵六",
+    phone: "88888888",
+    idCard: "88888888",
+    workArea: "深圳",
+    online: true,
+    active: true,
+    completedOrders: NumberInt("1"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 5,
+    totalDistance: 106853.640773167,
+    dailyDeliveries: NumberInt("1"),
+    dailyDistance: 106853.640773167,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("1"),
+    monthlyDistance: 106853.640773167,
+    monthlyRating: 0,
+    _class: "com.logistics.tracking.model.Courier"
+} ]);
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("685fd3c0c8775660207fc5d8"),
+    name: "asen",
+    phone: "111111111",
+    idCard: "111111111",
+    workArea: "北京",
+    online: false,
+    active: false,
+    completedOrders: NumberInt("0"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 5,
+    totalDistance: 0,
+    dailyDeliveries: NumberInt("0"),
+    dailyDistance: 0,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("0"),
+    monthlyDistance: 0,
+    monthlyRating: 0,
+    _class: "com.logistics.tracking.model.Courier",
+    totalDeliveries: 1
+} ]);
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("68618059a619e3254aa22320"),
+    name: "asen",
+    phone: "123456789",
+    idCard: "123456789",
+    workArea: "广州",
+    online: true,
+    active: true,
+    completedOrders: NumberInt("1"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 5,
+    totalDistance: 1074399.99048856,
+    dailyDeliveries: NumberInt("1"),
+    dailyDistance: 1074399.99048856,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("1"),
+    monthlyDistance: 1074399.99048856,
+    monthlyRating: 0,
+    _class: "com.logistics.tracking.model.Courier"
+} ]);
+db.getCollection("couriers").insert([ {
+    _id: ObjectId("68618109a619e3254aa22322"),
+    name: "tome",
+    phone: "9999999",
+    idCard: "99999999",
+    workArea: "北京",
+    online: true,
+    active: true,
+    completedOrders: NumberInt("0"),
+    complaintsCount: NumberInt("0"),
+    averageRating: 5,
+    totalDistance: 0,
+    dailyDeliveries: NumberInt("0"),
+    dailyDistance: 0,
+    dailyRating: 0,
+    monthlyDeliveries: NumberInt("0"),
+    monthlyDistance: 0,
+    monthlyRating: 0,
+    _class: "com.logistics.tracking.model.Courier"
+} ]);
+
+// ----------------------------
+// Collection structure for operation_logs
+// ----------------------------
+db.getCollection("operation_logs").drop();
+db.createCollection("operation_logs");
+
+// ----------------------------
+// Documents of operation_logs
+// ----------------------------
+db.getCollection("operation_logs").insert([ {
+    _id: ObjectId("686292fdcbc2f724591b8e3c"),
+    operationType: "DELETE_ORDER",
+    operationDescription: "删除订单",
+    operationTime: ISODate("2025-06-30T13:37:01.255Z"),
+    operatorId: "system",
+    operatorName: "System",
+    targetId: "685f98a243ebc32d283772c8",
+    targetType: "Order",
+    details: "订单ID: 685f98a243ebc32d283772c8, 发件人: 宋雨琦, 收件人: hello, 状态: DELIVERED, 金额: 998563.0506516257",
+    success: true,
+    ip: "0:0:0:0:0:0:0:1",
+    _class: "com.logistics.tracking.model.OperationLog"
+} ]);
+
+// ----------------------------
+// Collection structure for orders
+// ----------------------------
+db.getCollection("orders").drop();
+db.createCollection("orders");
+
+// ----------------------------
+// Documents of orders
+// ----------------------------
+db.getCollection("orders").insert([ {
+    _id: ObjectId("685f617105efee5bf77e0d16"),
+    courierId: "685ea0a61e0748b0fdd999a7",
+    courierName: "张三",
+    status: "DELIVERED",
+    senderName: "Winter",
+    senderAddress: "上海市浦东新区",
+    senderEmail: "1275895583@qq.com",
+    receiverName: "karina",
+    receiverAddress: "日照市人民医院",
+    receiverEmail: "1275895583@qq.com",
+    currentLat: 0,
+    currentLng: 0,
+    weight: NumberInt("1"),
+    amount: 1.5,
+    isPaid: false,
+    createTime: ISODate("2025-06-28T03:28:49.029Z"),
+    updateTime: ISODate("2025-06-30T00:37:44.731Z"),
+    pickupTime: ISODate("2025-06-29T17:36:22.932Z"),
+    deliveryTime: ISODate("2025-06-30T00:37:44.731Z"),
+    dispatchTime: ISODate("2025-06-29T17:36:22.932Z"),
+    transitTime: ISODate("2025-06-29T17:36:22.932Z"),
+    _class: "com.logistics.tracking.model.Order"
+} ]);
+db.getCollection("orders").insert([ {
+    _id: ObjectId("685fd456c8775660207fc5d9"),
+    courierId: "68618059a619e3254aa22320",
+    courierName: "asen",
+    status: "DELIVERED",
+    senderName: "karina",
+    senderAddress: "上海市浦东新区浦东软件园",
+    senderEmail: "3431358917@qq.com",
+    receiverName: "gisel",
+    receiverAddress: "北京市人民医院",
+    receiverEmail: "3431358917@qq.com",
+    currentLat: 0,
+    currentLng: 0,
+    weight: NumberInt("10"),
+    amount: 2148814.98097712,
+    isPaid: false,
+    createTime: ISODate("2025-06-28T11:39:01.751Z"),
+    updateTime: ISODate("2025-06-30T08:06:40.14Z"),
+    pickupTime: ISODate("2025-06-29T18:06:34.628Z"),
+    deliveryTime: ISODate("2025-06-30T08:06:40.14Z"),
+    dispatchTime: ISODate("2025-06-29T18:06:34.628Z"),
+    transitTime: ISODate("2025-06-29T18:06:34.628Z"),
+    remarks: "衣服",
+    _class: "com.logistics.tracking.model.Order"
+} ]);
+db.getCollection("orders").insert([ {
+    _id: ObjectId("6861257da5b8632bb184bf04"),
+    senderName: "ka'rina",
+    senderEmail: "1275895583@qq.com",
+    senderAddress: "北京市朝阳区建国路1号",
+    receiverName: "Winter",
+    receiverEmail: "1275895583@qq.com",
+    receiverAddress: "北京市海淀区中关村大街1号",
+    weight: 1,
+    volume: 0,
+    amount: 31444.2083629745,
+    isPaid: false,
+    status: "DELIVERED",
+    courierId: "685ea0a61e0748b0fdd999a8",
+    courierName: "李四",
+    deliveryTime: ISODate("2025-06-29T11:49:07.421Z"),
+    createTime: ISODate("2025-06-29T11:37:33.372Z"),
+    updateTime: ISODate("2025-06-29T11:49:07.421Z"),
+    pickupTime: ISODate("2025-06-29T11:37:39.219Z"),
+    dispatchTime: ISODate("2025-06-29T11:37:39.219Z"),
+    transitTime: ISODate("2025-06-29T11:37:39.219Z"),
+    remarks: "",
+    _class: "com.logistics.tracking.model.Order"
+} ]);
+db.getCollection("orders").insert([ {
+    _id: ObjectId("68615404d0c9e46de285705d"),
+    senderName: "karina",
+    senderEmail: "1275895583@qq.com",
+    senderAddress: "北京大学",
+    receiverName: "winter",
+    receiverEmail: "1275895583@qq.com",
+    receiverAddress: "集美大学",
+    weight: 1,
+    volume: 0,
+    amount: 3446651.75954603,
+    isPaid: false,
+    status: "DELIVERED",
+    courierId: "685ea0a61e0748b0fdd999a8",
+    courierName: "李四",
+    currentLat: 0,
+    currentLng: 0,
+    deliveryTime: ISODate("2025-06-29T17:42:35.378Z"),
+    createTime: ISODate("2025-06-29T14:56:03.982Z"),
+    updateTime: ISODate("2025-06-29T17:42:35.378Z"),
+    pickupTime: ISODate("2025-06-29T14:56:09.646Z"),
+    dispatchTime: ISODate("2025-06-29T14:56:09.646Z"),
+    transitTime: ISODate("2025-06-29T14:56:09.646Z"),
+    remarks: "",
+    _class: "com.logistics.tracking.model.Order"
+} ]);
+db.getCollection("orders").insert([ {
+    _id: ObjectId("68616bb149a69a5f078af758"),
+    senderName: "小乔",
+    senderEmail: "1275895583@qq.com",
+    senderAddress: "新疆大学",
+    receiverName: "大桥",
+    receiverEmail: "1275895583@qq.com",
+    receiverAddress: "山东大学",
+    weight: 1,
+    volume: 0,
+    amount: 5211287.99137095,
+    isPaid: false,
+    status: "DELIVERED",
+    courierId: "685f8248d6d10022bd528a15",
+    courierName: "Winter",
+    currentLat: 0,
+    currentLng: 0,
+    deliveryTime: ISODate("2025-06-29T17:33:39.968Z"),
+    createTime: ISODate("2025-06-29T16:37:05.068Z"),
+    updateTime: ISODate("2025-06-29T17:33:39.968Z"),
+    pickupTime: ISODate("2025-06-29T16:37:10.316Z"),
+    dispatchTime: ISODate("2025-06-29T16:37:10.316Z"),
+    transitTime: ISODate("2025-06-29T16:37:10.316Z"),
+    remarks: "测试1111",
+    _class: "com.logistics.tracking.model.Order"
+} ]);
+db.getCollection("orders").insert([ {
+    _id: ObjectId("68618093a619e3254aa22321"),
+    courierId: "685ea0a61e0748b0fdd999a7",
+    courierName: "张三",
+    status: "DELIVERED",
+    senderName: "asen",
+    senderAddress: "石河子大学",
+    senderEmail: "1275895583@qq.com",
+    receiverName: "toom",
+    receiverAddress: "厦门大学",
+    receiverEmail: "1275895583@qq.com",
+    currentLat: 0,
+    currentLng: 0,
+    weight: NumberInt("110"),
+    amount: 7279857.58064799,
+    isPaid: false,
+    createTime: ISODate("2025-06-29T18:06:11.424Z"),
+    updateTime: ISODate("2025-06-29T19:04:17.016Z"),
+    pickupTime: ISODate("2025-06-29T18:06:17.248Z"),
+    deliveryTime: ISODate("2025-06-29T19:04:17.016Z"),
+    dispatchTime: ISODate("2025-06-29T18:06:17.248Z"),
+    transitTime: ISODate("2025-06-29T18:06:17.248Z"),
+    remarks: "",
+    _class: "com.logistics.tracking.model.Order"
+} ]);
+db.getCollection("orders").insert([ {
+    _id: ObjectId("68627f17cdd1e64cad444b2a"),
+    courierId: "685ea0a61e0748b0fdd999a8",
+    courierName: "李四",
+    status: "IN_TRANSIT",
+    senderName: "karina",
+    senderAddress: "北京大学",
+    senderEmail: "1275895583@qq.com",
+    receiverName: "Winter",
+    receiverAddress: "深圳大学",
+    receiverEmail: "1275895583@qq.com",
+    weight: NumberInt("2"),
+    amount: 3907125.78677344,
+    isPaid: false,
+    createTime: ISODate("2025-06-30T12:12:06.725Z"),
+    updateTime: ISODate("2025-06-30T12:12:18.837Z"),
+    pickupTime: ISODate("2025-06-30T12:12:18.837Z"),
+    dispatchTime: ISODate("2025-06-30T12:12:18.837Z"),
+    transitTime: ISODate("2025-06-30T12:12:18.837Z"),
+    remarks: "书籍",
+    _class: "com.logistics.tracking.model.Order"
+} ]);
+db.getCollection("orders").insert([ {
+    _id: ObjectId("6862903d8f3d792f18d6777c"),
+    courierId: "685f9635600c723366afb36c",
+    courierName: "赵六",
+    status: "IN_TRANSIT",
+    senderName: "Winter",
+    senderAddress: "日照市人民医院",
+    senderEmail: "1275895583@qq.com",
+    receiverName: "karina",
+    receiverAddress: "青岛市人民医院",
+    receiverEmail: "1275895583@qq.com",
+    weight: NumberInt("10"),
+    amount: 213722.281546334,
+    isPaid: false,
+    createTime: ISODate("2025-06-30T13:25:16.801Z"),
+    updateTime: ISODate("2025-06-30T13:25:35.499Z"),
+    pickupTime: ISODate("2025-06-30T13:25:35.499Z"),
+    dispatchTime: ISODate("2025-06-30T13:25:35.499Z"),
+    transitTime: ISODate("2025-06-30T13:25:35.499Z"),
+    remarks: "医疗设备",
+    _class: "com.logistics.tracking.model.Order"
+} ]);

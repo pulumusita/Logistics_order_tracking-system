@@ -1,0 +1,19 @@
+# 清空所有数据
+FLUSHALL
+
+# 设置配送员在线状态（0表示离线，1表示在线）
+HSET courier:status courier:1 1
+HSET courier:status courier:2 1
+
+# 设置配送员位置信息
+GEOADD courier:locations 116.434062 39.909652 "courier:1"
+GEOADD courier:locations 121.501654 31.238068 "courier:2"
+
+# 设置订单缓存过期时间（24小时）
+CONFIG SET notify-keyspace-events Ex
+EXPIRE order:ORDER1 86400
+EXPIRE order:ORDER2 86400
+
+# 设置配送员工作区域订单队列
+LPUSH area:beijing:orders "ORDER1"
+LPUSH area:shanghai:orders "ORDER2" 
